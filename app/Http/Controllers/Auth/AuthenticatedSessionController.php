@@ -2,54 +2,57 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Controllers\API\BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
-class AuthenticatedSessionController extends Controller
+class AuthenticatedSessionController extends BaseController
 {
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): Response
+    public function login(Request $request)
     {
-        $request->authenticate();
+        $request->validate(rules: [
+            'nisn' => 'required|nisn|exists:users,nisn',
+            'password' => 'required|string|min:6'
+        ], 
+        params:[
+            'nisn.required' => 'nisn wajib diisi!',
+            'nisn.nisn' => 'input bukan format nisn!',
+            'nisn.exists' => 'nisn tidak terdaftar!',
+        ]);
 
-        // Regenerate session
-        $request->session()->regenerate();
+        $credentials = request(['nisnl', 'password']);
 
-        // Generate Sanctum token for API
-        $user = $request->user();
-        $token = $user->createToken('API Token')->plainTextToken;
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->json([
+                'data' => [
+                    'errors' => 'wrong email or password!'
+                ]
+            ], 401);
+        }
 
-        // Return token in response
-        return response()->json([
-            'message' => 'Login successful',
-            'token' => $token,
-        ], 200);
+        $success = self::respondWithToken($token);
+        //return $success;
+
+        return self::sendResponse($success->original, 'User login successfully.');
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): Response
+    public function destroy()
     {
-        // Revoke the current user's token
-        $request->user()->currentAccessToken()->delete();
-
-        // Logout from the web guard
-        Auth::guard('web')->logout();
-
-        // Invalidate session
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        // Confirm successful logout
+        auth()->logout();
         return response()->json([
-            'message' => 'Logout successful',
-        ], 200);
+            'status' => 'success',
+            'message' => 'Successfully logged out',
+        ]);
+    }
+
+    private function respondWithToken($token)
+    {
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 14400
+        ]);
     }
 }
