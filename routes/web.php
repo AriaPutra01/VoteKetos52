@@ -6,7 +6,7 @@ Route::get('/', function () {
     return view('app');
 });
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
 
 
 

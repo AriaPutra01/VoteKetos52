@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+//use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Student extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $fillable = ['nama', 'nisn', 'jurusan', 'kelas', ];
+    protected $table = 'student';
+
+    protected $fillable = ['nisn', 'jurusan', 'kelas'];
 
     // function answear(): BelongsToMany
     // {

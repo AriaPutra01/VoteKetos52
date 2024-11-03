@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable 
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasUlids;
 
@@ -23,9 +23,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'nama',
-        'nisn',
         'password',
         'role_id',
+        'role',
     ];
 
     /**
@@ -46,7 +46,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'nisn_verified_at' => 'datetime',
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -56,6 +56,7 @@ class User extends Authenticatable
      *
      * @return mixed
      */
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -71,18 +72,30 @@ class User extends Authenticatable
         return [];
     }
 
-    function role(): BelongsTo
+    //isidong role nya
+    // protected static function booted()
+    // {
+    //     static::creating(function ($users) {
+    //         if ($users->role_id) {
+    //             $users->role = roles::where('id', $users->role_id)->value('role_name');
+    //         }
+    //     });
+    // }
+
+    function roles(): BelongsTo
     {
-        return self::belongsTo(Role::class)->select('role_name');
+        return self::belongsTo(roles::class)->select('role_name');
     }
 
     function student(): BelongsToMany
     {
-        return self::belongsToMany(Student::class, 'user_students', 'user_id', 'student_id')->select('nama','nisn', 'kelas', 'jurusan');
+        return self::belongsToMany(Student::class, 'user_students', 'user_id', 'student_id')->select('nama', 'nisn', 'kelas', 'jurusan');
     }
 
-    function counselingTeacher(): BelongsToMany
+    function admin(): BelongsToMany
     {
-        return self::belongsToMany(Admin::class, 'admin', 'user_id', 'admin_id');
+        return self::belongsToMany(Admin::class, 'user_admin', 'user_id', 'admin_id');
     }
+
+
 }

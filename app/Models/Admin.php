@@ -11,4 +11,5 @@ class Admin extends Model
     use HasFactory, HasUlids;
 
     protected $fillable = ['nama'];
+    protected $table = 'admin';
 }

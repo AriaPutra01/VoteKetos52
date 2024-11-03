@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\PasswordReset;
 use App\Models\Role;
+use App\Models\roles;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\UserStudent;
@@ -99,7 +100,7 @@ class UserController extends BaseController
 
     private function roles()
     {
-        return new Role();
+        return new roles();
     }
 
     private function getUserData()

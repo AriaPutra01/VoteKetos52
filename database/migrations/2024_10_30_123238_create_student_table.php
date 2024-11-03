@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->integer('nisn')->length(100)->unique();
             $table->timestamp('nisn_verified_at')->nullable();
-            $table->string('kelas', 2);
+            $table->string('kelas', 3);
             $table->enum('jurusan', ['PPLG', 'TJKT', 'MPLB', 'TKRO', 'TSM', 'DKV', 'HOTEL', 'MESIN']);
             $table->timestamps();
         });

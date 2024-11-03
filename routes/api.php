@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\API\AuthControllerServices;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+ use App\Http\Controllers\AuthController;
+// use App\Http\Controllers\Auth\AuthenticatedSessionController;
+// use App\Http\Controllers\Auth\NewPasswordController;
+// use App\Http\Controllers\Auth\PasswordResetLinkController;
+// use App\Http\Controllers\Auth\RegisteredUserController;
 // use App\Http\Controllers\QuestionController;
 // use App\Http\Controllers\ResultSimulationController;
 // use App\Http\Controllers\SimulationTestController;
@@ -15,9 +15,9 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function ($router) {
-    Route::post('/login', [AuthenticatedSessionController::class, 'login']);
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:api');
-    Route::get('/me', [AuthControllerServices::class, 'me'])->middleware('auth:api');
+    Route::post('/login', [AuthController::class, 'login']);
+    // Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:api');
+    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     // Route::post('/refresh', [AuthControllerServices::class, 'refresh'])->middleware('auth:api');
     // Route::post('/teacher-register', [AuthControllerServices::class, 'teacherRegister'])->middleware('auth:api');
     // Route::post('/student-register', [AuthControllerServices::class, 'studentRegister'])->middleware('auth:api');
@@ -55,9 +55,9 @@ Route::group([
 //     Route::get('/question-by-simulation-id/{simulationId}', [QuestionController::class, 'getQuestionBySimulationId'])->middleware('auth:api');
 // });
 
-Route::middleware('guest')->group(function () {
-    Route::post('register', [RegisteredUserController::class, 'store']);
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
-    Route::post('reset-password-token-check', [PasswordResetLinkController::class, 'checkToken'])->name('password.reset');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
-});
+// Route::middleware('guest')->group(function () {
+//     Route::post('register', [RegisteredUserController::class, 'store']);
+//     Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
+//     Route::post('reset-password-token-check', [PasswordResetLinkController::class, 'checkToken'])->name('password.reset');
+//     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
+// });

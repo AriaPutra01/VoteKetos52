@@ -13,19 +13,50 @@ abstract class Controller
     protected function authUser()
     {
         $user = Auth::user();
-        $user->role;
-        $user->student;
-        $user->counselingTeacher;
+        $user->roles;
+        // $user->student;
+        // $user->counselingTeacher;
         return $user;
     }
 
-    protected function isCounselingTeacher($role)
+    protected function isadmin($roles)
     {
-        return $role == 'admin';
+        return $roles == 'admin';
     }
 
-    protected function isStudent($role)
+    protected function isstudent($roles)
     {
-        return $role == 'Student';
+        return $roles == 'siswa';
+    }
+
+    public function sendResponse($result, $message, $code = 200)
+    {
+        $response = [
+            'success' => true,
+            'data'    => $result,
+            'message' => $message,
+        ];
+
+        return response()->json($response, $code);
+    }
+
+    /**
+     * return error response.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendError($error, $errorMessages = [], $code = 404)
+    {
+        $response = [
+            'success' => false,
+            'message' => $error,
+        ];
+
+        if (!empty($errorMessages)) {
+            $response['data'] = $errorMessages;
+        }
+
+        return response()->json($response, $code);
     }
 }
+
