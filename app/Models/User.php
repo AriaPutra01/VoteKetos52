@@ -72,30 +72,18 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    //isidong role nya
-    // protected static function booted()
-    // {
-    //     static::creating(function ($users) {
-    //         if ($users->role_id) {
-    //             $users->role = roles::where('id', $users->role_id)->value('role_name');
-    //         }
-    //     });
-    // }
-
     function roles(): BelongsTo
     {
-        return self::belongsTo(roles::class)->select('role_name');
+        return self::belongsTo(Roles::class, 'role_id', 'id')->select('role_name as name');
     }
 
     function student(): BelongsToMany
     {
-        return self::belongsToMany(Student::class, 'user_students', 'user_id', 'student_id')->select('nama', 'nisn', 'kelas', 'jurusan');
+        return self::belongsToMany(Student::class, 'user_students', 'user_id', 'student_id');
     }
 
     function admin(): BelongsToMany
     {
-        return self::belongsToMany(Admin::class, 'user_admin', 'user_id', 'admin_id');
+        return self::belongsToMany(Admin::class, 'user_admin', 'user_id', 'admin_id')->select('keterangan');
     }
-
-
 }

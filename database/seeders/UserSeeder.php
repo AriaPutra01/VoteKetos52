@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\Admin;
 use App\Models\Role;
 
@@ -19,83 +20,70 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = [[
-            "role_name" => "admin",
+        $role = [
+            [
+                "role_name" => "admin",
 
-        ],
-        [
-            "role_name" => "siswa",
-        ],
-     ];
-     foreach ($role as $key => $value){
-        roles::create([
-            "role_name" => $value["role_name"],
-        ]);
-     } 
+            ],
+            [
+                "role_name" => "siswa",
+            ],
+        ];
+        foreach ($role as $key => $value) {
+            roles::create([
+                "role_name" => $value["role_name"],
+            ]);
+        }
 
-     $student = roles::where('role_name', 'siswa')->first();
-     $admin = roles::where('role_name', 'admin')->first();
-     
+        $admin = roles::whereRoleName('admin')->first();
 
-      
-
-        $user = [[
+        $adminCreate = [
             "nama" => "admin",
-            "nisn" => "54321",
             "password" => bcrypt('12345'),
             "role_id" => $admin->id,
-            "role" => $admin->role_name,
+        ];
 
+        $userAdmin = User::create([
+            "nama" => $adminCreate["nama"],
+            "password" => $adminCreate["password"],
+            "role_id" => $adminCreate["role_id"]
+        ]);
 
-          
-        ],
-        [
+        $adminKet = Admin::create([
+            'keterangan' => 'User Admin'
+        ]);
+
+        Useradmin::create([
+            'user_id' => $userAdmin->id,
+            'admin_id' => $adminKet->id
+        ]);
+
+        $student = roles::whereRoleName('siswa')->first();
+
+        $studentCreate = [
             "nama" => "student",
-            "nisn" => "54321",
             "password" => bcrypt('12345'),
             "role_id" => $student->id,
-            "role" => $student->role_name,
-          
-        ]];
-  
-         foreach ($user as $key => $value){
-            $user = User::create([
-                "nama" => $value["nama"],
-                "password" => $value["password"],
-                "role_id" => $value["role_id"],
-                "role" => $value["role"],
-                //"roles" => $value["roles"],
-            ]);
+            "nisn" => "54321",
+            "jurusan" => "PPLG",
+            "kelas" => "XII"
+        ];
 
-            if($user->role_id == $student->id){
+        $userStudent = User::create([
+            "nama" => $studentCreate["nama"],
+            "password" => $studentCreate["password"],
+            "role_id" => $studentCreate["role_id"],
+        ]);
 
-                $student = Student::create([
-                    "nisn" => "45637",
-                    "kelas" => "XII",
-                    "jurusan" => "PPLG",
-                ]);
-                UserStudent::create([
-                    "user_id" => $user->id,
-                    "student_id" => $student->id,
-                ]);
-                }
+        $studentDetail = Student::create([
+            'nisn' => $studentCreate['nisn'],
+            'jurusan' => $studentCreate['jurusan'],
+            'kelas' => $studentCreate['kelas']
+        ]);
 
-
-                if($user->role_id == $admin->id){
-
-                    $admin = Admin::create([
-                        "keterangan" => "admin",
-                    ]);
-                    Useradmin::create([
-                        "user_id" => $user->id,
-                        "admin_id" => $admin->id,
-                    ]);
-                    }
-            }
-
-            
-
-
-        
+        UserStudent::create([
+            'user_id' => $userStudent->id,
+            'student_id' => $studentDetail->id
+        ]);
     }
 }
