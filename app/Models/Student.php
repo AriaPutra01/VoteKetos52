@@ -14,9 +14,4 @@ class Student extends Model
     protected $table = 'student';
 
     protected $fillable = ['nisn', 'jurusan', 'kelas'];
-
-    // function answear(): BelongsToMany
-    // {
-    //     return self::belongsToMany(Option::class, 'student_answear', 'student_id',);
-    // }
 }

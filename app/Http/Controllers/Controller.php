@@ -14,8 +14,8 @@ abstract class Controller
     {
         $user = Auth::user();
         $user->roles;
-        // $user->student;
-        // $user->counselingTeacher;
+        $user->student;
+        $user->admin;
         return $user;
     }
 
@@ -59,4 +59,3 @@ abstract class Controller
         return response()->json($response, $code);
     }
 }
-

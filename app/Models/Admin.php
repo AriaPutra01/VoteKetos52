@@ -10,6 +10,6 @@ class Admin extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $fillable = ['nama'];
+    protected $fillable = ['keterangan'];
     protected $table = 'admin';
 }

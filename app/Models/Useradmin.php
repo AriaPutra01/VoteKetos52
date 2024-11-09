@@ -11,6 +11,7 @@ class Useradmin extends Model
     use HasFactory, HasUlids;
     protected $table = 'user_admin';
     protected $fillable = [
-        'keterangan'
+        'user_id',
+        'admin_id'
     ];
 }
