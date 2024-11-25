@@ -17,7 +17,7 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable, HasUlids;
 
     /**
-     * The attributes that are mass assignable.
+     *  The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
@@ -85,5 +85,10 @@ class User extends Authenticatable implements JWTSubject
     function admin(): BelongsToMany
     {
         return self::belongsToMany(Admin::class, 'user_admin', 'user_id', 'admin_id')->select('keterangan');
+
+    }
+    
+    function candidate(): BelongsToMany{
+        return self::belongsToMany(Candidate::class, 'nama_kandidat', 'student_id', 'deskripsi', 'visi_misi', 'foto');
     }
 }

@@ -10,6 +10,8 @@
 // use App\Http\Controllers\SimulationTestController;
 // use App\Http\Controllers\SubmissionAnswear;
 use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\CaketosController;
+
 
 Route::group([
     'middleware' => 'api',
@@ -18,6 +20,7 @@ Route::group([
     Route::post('/login', [AuthController::class, 'login']);
     // Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:api');
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
+    Route::post('/candidates', [CaketosController::class, 'store'])->middleware('auth:api');
     // Route::post('/refresh', [AuthControllerServices::class, 'refresh'])->middleware('auth:api');
     // Route::post('/teacher-register', [AuthControllerServices::class, 'teacherRegister'])->middleware('auth:api');
     // Route::post('/student-register', [AuthControllerServices::class, 'studentRegister'])->middleware('auth:api');

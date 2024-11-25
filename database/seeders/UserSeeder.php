@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Candidate;
 use App\Models\Role;
 
 use App\Models\roles;
@@ -11,6 +12,7 @@ use App\Models\User;
 use App\Models\Useradmin;
 use App\Models\UserStudent;
 //use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+//use App\Models\Candidate;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -35,6 +37,7 @@ class UserSeeder extends Seeder
             ]);
         }
 
+        //dummy admin
         $admin = roles::whereRoleName('admin')->first();
 
         $adminCreate = [
@@ -57,6 +60,8 @@ class UserSeeder extends Seeder
             'user_id' => $userAdmin->id,
             'admin_id' => $adminKet->id
         ]);
+
+        //dummy student
 
         $student = roles::whereRoleName('siswa')->first();
 
@@ -85,5 +90,14 @@ class UserSeeder extends Seeder
             'user_id' => $userStudent->id,
             'student_id' => $studentDetail->id
         ]);
+
+        //dummy candidate
+        $candidateCreate = [
+            "nama_kandidat" => "robi",
+            "visi_misi" => "memajukan PI",
+            "foto" => "senyumpng"
+        ];
+
+       
     }
 }
