@@ -1,19 +1,34 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Candidate;
 use Illuminate\Support\Facades\Storage;
 
 class CaketosController extends Controller
 {
+    public function __construct()
+    {
+     
+        $this->middleware('auth:api'); 
+    }
+
     public function store(Request $request)
     {
+        // Validasi peran pengguna
+        if (auth()->user()->role !== 'admin') {
+            return response()->json([
+                'error' => 'Unauthorized. Only admins can add candidates.'
+            ], 403);
+        }
+
+        // Validasi data input
         $request->validate([
             'nama_kandidat' => 'required|string|max:255',
             'deskripsi' => 'required|string|max:500',
             'visi_misi' => 'required|string|max:300',
-            'base64_image' => 'required|string|base64', // Add base64 validation
+            'base64_image' => 'required|string|base64',
         ]);
 
         try {
@@ -21,7 +36,7 @@ class CaketosController extends Controller
             $image = str_replace(' ', '+', $image);
             $data = base64_decode($image);
 
-            $imageName = time() . '.' . 'png'; 
+            $imageName = time() . '.png'; 
             Storage::disk('public')->put('uploads/' . $imageName, $data);
 
             Candidate::create([
@@ -32,7 +47,7 @@ class CaketosController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Product created successfully'
+                'message' => 'Candidate added successfully'
             ], 201);
         } 
         catch (\Exception $e) {
