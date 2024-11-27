@@ -3,12 +3,19 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Student;
-use App\Models\StudentAnswear;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class BaseController extends Controller
 {
-    
+    protected function authUser()
+    {
+        $user = Auth::user();
+        $user->role;
+        $user->student;
+        return $user;
+    }
+
     /**
      * success response method.
      *
@@ -44,13 +51,13 @@ class BaseController extends Controller
         return response()->json($response, $code);
     }
 
-    // protected function studentAnswear()
-    // {
-    //     return new StudentAnswear;
-    // }
+    protected function storeUser($request)
+    {
+        return self::getUser()->create($request);
+    }
 
-    // protected function student()
-    // {
-    //     return new Student;
-    // }
+    private function getUser()
+    {
+        return new User;
+    }
 }

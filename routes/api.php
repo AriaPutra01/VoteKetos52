@@ -1,6 +1,6 @@
 <?php
 
- use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthController;
 // use App\Http\Controllers\Auth\AuthenticatedSessionController;
 // use App\Http\Controllers\Auth\NewPasswordController;
 // use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -14,21 +14,23 @@ use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\CaketosController;
 
 
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], 
+Route::group(
+    [
+        'middleware' => 'api',
+        'prefix' => 'auth'
+    ],
 
-function ($router) {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth:api');
-    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
-    Route::post('/caketos', [CaketosController::class, 'store'])->middleware(['auth:api', 'role:admin']);
+    function ($router) {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth:api');
+        Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
+        Route::post('/caketos', [CaketosController::class, 'store'])->middleware(['auth:api', 'role:admin']);
 
-    // Route::post('/refresh', [AuthControllerServices::class, 'refresh'])->middleware('auth:api');
-    // Route::post('/teacher-register', [AuthControllerServices::class, 'teacherRegister'])->middleware('auth:api');
-    // Route::post('/student-register', [AuthControllerServices::class, 'studentRegister'])->middleware('auth:api');
-});
+        // Route::post('/refresh', [AuthControllerServices::class, 'refresh'])->middleware('auth:api');
+        // Route::post('/teacher-register', [AuthControllerServices::class, 'teacherRegister'])->middleware('auth:api');
+        // Route::post('/student-register', [AuthControllerServices::class, 'studentRegister'])->middleware('auth:api');
+    }
+);
 
 // Route::group([
 //     'middleware' => 'api',
