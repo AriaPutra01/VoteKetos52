@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class CaketosController extends CaketosServiceController
 {
+    public function getCaketos()
+    {
+        $data = self::index();
+        return response()->json([
+            'data' => $data,
+            'message' => 'Candidate is founded'
+        ], 200);
+    }
+
     public function storeCaketos(Request $request)
     {
         $user = self::authUser();
@@ -24,7 +33,7 @@ class CaketosController extends CaketosServiceController
             'deskripsi' => 'required|string|max:500',
             'visi_misi' => 'required|string|max:300',
             'foto' => 'required|image|max:5120',
-            'student_id' => 'required|digit_between:1,10'
+            'student_id' => 'required|exists:student,id'
         ], [
             'nama_kandidat.required' => 'Nama kandiditat tidak boleh kosong',
             'deskripsi.required' => 'Deskripsi tidak bolej kosong',
@@ -35,14 +44,15 @@ class CaketosController extends CaketosServiceController
 
         try {
 
-            $doc = Carbon::now()->format('Y-m-d_H:i:s') . '.' . $request->base64_image->extension();
-            $request->file('base64_image')->move(public_path('upload/'), $doc);
+            $doc = Carbon::now()->format('Y-m-d_H:i:s') . '.' . $request->foto->extension();
+            $request->file('foto')->move(public_path('upload/'), $doc);
 
             $data = [
                 'nama_kandidat' => $request->nama_kandidat,
                 'deskripsi' => $request->deskripsi,
                 'visi_misi' => $request->visi_misi,
-                'image_path' => url('/upload/') . $doc,
+                'student_id' => $request->student_id,
+                'foto' => url('/upload/') . '/' . $doc,
             ];
 
             self::store($data);

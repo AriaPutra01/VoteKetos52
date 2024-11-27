@@ -12,7 +12,14 @@ class CaketosServiceController extends Controller
      */
     public function index()
     {
-        //
+        return self::candidate()
+            ->join('student', function ($join) {
+                $join->on('student.id', '=', 'candidates.student_id');
+            })
+            ->join('user_students', function ($join) {
+                $join->on('student.id', '=', 'user_students.student_id');
+            })
+            ->get();
     }
 
     /**
