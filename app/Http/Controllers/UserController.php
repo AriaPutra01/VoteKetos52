@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         $user = Auth::user(); // Mendapatkan pengguna yang sedang login
 
-        // Validasi input pengguna
+        // Validasi input pengguna    
         $validated = $request->validate([
             'name' => 'string|max:255',
             'email' => 'string|email|unique:users,email,' . $user->id,

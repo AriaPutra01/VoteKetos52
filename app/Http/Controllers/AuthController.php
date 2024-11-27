@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Http\Controllers\API\BaseController;
 
 
 
@@ -42,7 +43,7 @@ public function login(Request $request)
     return $this->respondWithToken($token);
 }
 
-protected function respondWithToken($token)
+private function respondWithToken($token)
 {
     return response()->json([
         'access_token' => $token,
@@ -60,4 +61,15 @@ function me()
     return self::sendResponse($success, 'profile found!.');
 }
 
+public function destroy()
+{
+    auth()->logout();
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Successfully logged out',
+    ]);
 }
+
+}
+
+
