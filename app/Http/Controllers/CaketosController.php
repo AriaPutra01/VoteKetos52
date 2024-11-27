@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\API\CaketosServiceController;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Candidate;
-use Illuminate\Support\Facades\Storage;
 
-class CaketosController extends Controller
+class CaketosController extends CaketosServiceController
 {
-    public function __construct()
+    public function getCaketos()
     {
-     
-        $this->middleware('auth:api'); 
+        $data = self::index();
+        return response()->json([
+            'data' => $data,
+            'message' => 'Candidate is founded'
+        ], 200);
     }
 
-    public function store(Request $request)
+    public function storeCaketos(Request $request)
     {
-        // Validasi peran pengguna
-        if (auth()->user()->role !== 'admin') {
+        $user = self::authUser();
+
+        if ($user->roles->name !== 'admin') {
             return response()->json([
                 'error' => 'Unauthorized. Only admins can add candidates.'
             ], 403);
@@ -28,29 +32,35 @@ class CaketosController extends Controller
             'nama_kandidat' => 'required|string|max:255',
             'deskripsi' => 'required|string|max:500',
             'visi_misi' => 'required|string|max:300',
-            'base64_image' => 'required|string|base64',
+            'foto' => 'required|image|max:5120',
+            'student_id' => 'required|exists:student,id'
+        ], [
+            'nama_kandidat.required' => 'Nama kandiditat tidak boleh kosong',
+            'deskripsi.required' => 'Deskripsi tidak bolej kosong',
+            'visi_misi.required' => 'Visi & misi tidak boleh kosong',
+            'foto.required' => 'Gambar wajib upload',
+            'student_id.required' => 'siswa wajib dipilih'
         ]);
 
         try {
-            $image = str_replace('data:image/png;base64,', '', $request->base64_image);
-            $image = str_replace(' ', '+', $image);
-            $data = base64_decode($image);
 
-            $imageName = time() . '.png'; 
-            Storage::disk('public')->put('uploads/' . $imageName, $data);
+            $doc = Carbon::now()->format('Y-m-d_H:i:s') . '.' . $request->foto->extension();
+            $request->file('foto')->move(public_path('upload/'), $doc);
 
-            Candidate::create([
+            $data = [
                 'nama_kandidat' => $request->nama_kandidat,
                 'deskripsi' => $request->deskripsi,
                 'visi_misi' => $request->visi_misi,
-                'image_path' => 'uploads/' . $imageName, 
-            ]);
+                'student_id' => $request->student_id,
+                'foto' => url('/upload/') . '/' . $doc,
+            ];
+
+            self::store($data);
 
             return response()->json([
                 'message' => 'Candidate added successfully'
             ], 201);
-        } 
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage()
             ], 500);
